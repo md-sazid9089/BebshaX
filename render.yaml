@@ -11,7 +11,7 @@ services:
     region: singapore # keep next to the Neon project (ap-southeast-1)
     plan: 1c-2g # numpy/scipy/sklearn + the loaded bundle need > 512 MB
     healthCheckPath: /api/health/ready
-    autoDeployTrigger: checksPass
+    autoDeployTrigger: commit
     maxShutdownDelaySeconds: 45
     # Runs inside the new image before it takes traffic; a failed migration aborts
     # the deploy while the previous version keeps serving. Neon recommends the
