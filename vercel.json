@@ -1,6 +1,6 @@
 {
   "framework": "vite",
-  "installCommand": "npm ci --workspaces --include-workspace-root",
+  "installCommand": "npm ci --include=dev --workspaces --include-workspace-root",
   "buildCommand": "node scripts/ops/web-config.mjs build-vercel vercel.json",
   "outputDirectory": "apps/frontend/dist",
   "headers": [
