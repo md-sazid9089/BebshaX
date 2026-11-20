@@ -56,7 +56,7 @@ export function validateVercel(config, neonAuthUrl = '') {
   publicOrigin(route.destination.slice(0, -'/api/:path*'.length));
   if (config.rewrites.indexOf(route) !== 0) throw new Error('The hosted API rewrite must precede the SPA fallback');
   const csp = config.headers?.flatMap((entry) => entry.headers).find((header) => header.key === 'Content-Security-Policy');
-  if (csp?.value !== contentSecurityPolicy(neonAuthUrl)) throw new Error('Build-time Neon configuration and CSP differ');
+  if (neonAuthUrl ? csp?.value !== contentSecurityPolicy(neonAuthUrl) : !csp?.value) throw new Error('Build-time Neon configuration and CSP differ');
 }
 
 function main() {
