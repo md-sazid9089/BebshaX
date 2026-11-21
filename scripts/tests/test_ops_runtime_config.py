@@ -14,6 +14,12 @@ class RuntimeConfigurationTests(unittest.TestCase):
     def test_exact_public_origin_and_pinned_required_model_are_accepted(self) -> None:
         validate(self.configuration())
 
+    def test_multiple_comma_separated_origins_are_accepted(self) -> None:
+        validate({
+            **self.configuration(),
+            "BEBSHAX_CORS_ORIGINS": "https://app.example.test,https://second.example.test"
+        })
+
     def test_forwarded_for_limits_without_trusted_networks_are_rejected_but_optional(self) -> None:
         validate({**self.configuration(), "BEBSHAX_RATE_LIMIT_TRUST_FORWARDED_FOR": "false", "BEBSHAX_TRUSTED_PROXY_CIDRS": ""})
         with self.assertRaises(ValueError):

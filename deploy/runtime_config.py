@@ -25,8 +25,12 @@ def validate(environment: Mapping[str, str]) -> None:
     if environment.get("BEBSHAX_ENVIRONMENT") not in {"production", "staging"}:
         raise ValueError("Release containers require an explicit hosted environment")
     origin = https_origin(environment.get("BEBSHAX_FRONTEND_BASE_URL", ""))
-    if environment.get("BEBSHAX_CORS_ORIGINS", "").rstrip("/") != origin or environment.get("BEBSHAX_CORS_ORIGIN_REGEX", ""):
-        raise ValueError("Credentialed CORS must match the exact frontend origin, with no regex")
+    raw_cors = environment.get("BEBSHAX_CORS_ORIGINS", "")
+    if not raw_cors or environment.get("BEBSHAX_CORS_ORIGIN_REGEX", ""):
+        raise ValueError("Credentialed CORS must specify explicit origin(s), with no regex")
+    cors_origins = [https_origin(o.strip()) for o in raw_cors.split(",") if o.strip()]
+    if origin not in cors_origins:
+        raise ValueError("Credentialed CORS must include the exact frontend base URL")
     if environment.get("BEBSHAX_DEMO_MODE", "false").lower() not in {"false", "0"}:
         raise ValueError("Demo seeding is forbidden in release containers")
     # uvicorn only serves plain HTTP; without trusting the TLS proxy's forwarded
